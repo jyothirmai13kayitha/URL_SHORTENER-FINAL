@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stats for {{ url.get_short_url }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .stats { margin: 20px 0; }
+        .stat-item { margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>Stats for {{ url.get_short_url }}</h1>
+
+    <div class="stats">
+        <div class="stat-item">
+            <strong>Original URL:</strong> <a href="{{ url.original_url }}" target="_blank">{{ url.original_url }}</a>
+        </div>
+        <div class="stat-item">
+            <strong>Title:</strong> {{ url.title }}
+        </div>
+        <div class="stat-item">
+            <strong>Short URL:</strong> <a href="{{ request.scheme }}://{{ request.get_host }}/{{ url.get_short_url }}" target="_blank">
+                {{ request.scheme }}://{{ request.get_host }}/{{ url.get_short_url }}
+            </a>
+        </div>
+        <div class="stat-item">
+            <strong>Total Clicks:</strong> {{ url.click_count }}
+        </div>
+        <div class="stat-item">
+            <strong>Created:</strong> {{ url.created_at }}
+        </div>
+        <div class="stat-item">
+            <strong>Expires:</strong> {% if url.expires_at %}{{ url.expires_at }}{% else %}Never{% endif %}
+        </div>
+    </div>
+
+    <p><a href="{% url 'dashboard' %}">Back to Dashboard</a></p>
+</body>
+</html>

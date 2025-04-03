@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>URL Shortened</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .short-url { font-size: 1.2em; margin: 20px 0; }
+        input { width: 100%; padding: 8px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>Your URL has been shortened!</h1>
+
+    <p>Original URL: {{ shortened_url.original_url }}</p>
+
+    <div class="short-url">
+        <p>Short URL:</p>
+        <input type="text" value="{{ base_url }}{{ shortened_url.get_short_url }}" readonly>
+        <button onclick="copyToClipboard()">Copy</button>
+    </div>
+
+    <script>
+        function copyToClipboard() {
+            const copyText = document.querySelector("input");
+            copyText.select();
+            document.execCommand("copy");
+            alert("Copied to clipboard: " + copyText.value);
+        }
+    </script>
+
+    <p><a href="{% url 'index' %}">Shorten another URL</a></p>
+</body>
+</html>

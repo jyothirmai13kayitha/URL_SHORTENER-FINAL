@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Custom URL Shortener</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .form-group { margin-bottom: 15px; }
+        input[type="url"], input[type="text"], input[type="number"] {
+            width: 100%; padding: 8px; margin-top: 5px;
+        }
+        button { background: #4CAF50; color: white; padding: 10px 15px; border: none; cursor: pointer; }
+        .error { color: red; }
+        .success { color: green; }
+    </style>
+</head>
+<body>
+    <h1>Custom URL Shortener</h1>
+    {% csrf_token %}
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="{% if message.tags %}{{ message.tags }}{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="post" action="{% url 'shorten_url' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="original_url">URL to shorten:</label>
+            <input type="url" id="original_url" name="original_url" required placeholder="https://example.com">
+        </div>
+
+        <div class="form-group">
+            <label for="custom_code">Custom short code (optional):</label>
+            <input type="text" id="custom_code" name="custom_code" placeholder="my-custom-link">
+            <small>Leave blank for auto-generated code</small>
+        </div>
+
+        <div class="form-group">
+            <label for="expiration_days">Expire after (days, optional):</label>
+            <input type="number" id="expiration_days" name="expiration_days" min="1" placeholder="30">
+            <small>Leave blank for no expiration</small>
+        </div>
+
+        <button type="submit">Shorten URL</button>
+    </form>
+
+    {% if user.is_authenticated %}
+        <p><a href="{% url 'dashboard' %}">Go to Dashboard</a></p>
+    {% else %}
+        <p><a href="{% url 'admin:login' %}">Login to manage your URLs</a></p>
+    {% endif %}
+</body>
+</html>

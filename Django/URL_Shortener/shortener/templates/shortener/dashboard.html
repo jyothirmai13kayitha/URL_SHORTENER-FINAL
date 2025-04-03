@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Your Shortened URLs</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 1000px; margin: 0 auto; padding: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        tr:nth-child(even) { background-color: #f9f9f9; }
+        .expired { color: #999; }
+    </style>
+</head>
+<body>
+    <h1>Your Shortened URLs</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Short Code</th>
+                <th>Original URL</th>
+                <th>Title</th>
+                <th>Clicks</th>
+                <th>Created</th>
+                <th>Expires</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for url in urls %}
+            <tr {% if url.expires_at and url.expires_at < now %}class="expired"{% endif %}>
+                <td><a href="{% url 'url_stats' url.get_short_url %}">{{ url.get_short_url }}</a></td>
+                <td><a href="{{ url.original_url }}" target="_blank">{{ url.original_url|truncatechars:40 }}</a></td>
+                <td>{{ url.title|truncatechars:30 }}</td>
+                <td>{{ url.click_count }}</td>
+                <td>{{ url.created_at|date:"Y-m-d" }}</td>
+                <td>
+                    {% if url.expires_at %}
+                        {{ url.expires_at|date:"Y-m-d" }}
+                    {% else %}
+                        Never
+                    {% endif %}
+                </td>
+                <td><a href="{% url 'url_stats' url.get_short_url %}">Stats</a></td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7">No shortened URLs yet</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <p><a href="{% url 'index' %}">Shorten another URL</a></p>
+</body>
+</html>
